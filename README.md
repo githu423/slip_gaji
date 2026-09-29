@@ -9,7 +9,9 @@ pengguna lewat JavaScript. Tidak ada data yang dikirim ke server mana pun,
 jadi cukup di-host sebagai file statis.
 
 ## Isi folder
-- `index.html` — seluruh aplikasi (HTML + CSS + JS jadi satu file)
+- `index.html` — struktur halaman dan konten
+- `css/styles.css` — seluruh tampilan, komponen, dan layout responsif
+- `js/app.js` — unggah Excel, pencarian, perhitungan gaji, dan ekspor dokumen
 - `vercel.json` — konfigurasi minimal untuk Vercel
 - `README.md` — file ini
 
@@ -49,7 +51,7 @@ Ikuti instruksi di terminal (login, pilih scope, deploy). Vercel akan
 mendeteksi ini sebagai proyek statis, tidak perlu build command apa pun.
 
 **Opsi 2 — lewat dashboard Vercel**
-1. Push folder ini ke repo GitHub (boleh cuma berisi 3 file ini).
+1. Push folder ini ke repo GitHub (sertakan folder `css` dan `js`).
 2. Di [vercel.com](https://vercel.com), klik **Add New → Project**, pilih repo tersebut.
 3. Framework Preset: pilih **Other**. Build Command & Output Directory kosongkan saja.
 4. Klik **Deploy**.
@@ -62,3 +64,20 @@ mendeteksi ini sebagai proyek statis, tidak perlu build command apa pun.
 - Kalau butuh kolom tunjangan/potongan yang jumlahnya beda-beda tiap
   perusahaan, tinggal tambah kolom baru di Excel dengan awalan "Tunjangan"
   atau "Potongan" — tidak perlu ubah kode.
+
+## Pengembangan lokal
+
+Tidak memerlukan build atau instalasi dependensi. Jalankan server statis dari root proyek:
+
+```bash
+python3 -m http.server 8000 --bind 0.0.0.0
+```
+
+Buka `http://localhost:8000`. Ubah tampilan di `css/styles.css` (dikelompokkan menjadi token desain, header, kartu, form, tabel, footer, dan responsivitas). Logika aplikasi ada di `js/app.js`.
+
+### Pemeriksaan manual
+- Unduh template, lalu unggah kembali; kedua pegawai dan total gajinya harus tampil.
+- Ketik beberapa karakter pada pencarian; fokus dan posisi kursor harus tetap terjaga.
+- Coba file kosong, kolom wajib yang hilang, dan file bukan Excel; pesan kesalahan harus muncul.
+- Isi detail slip, unduh Word/PDF per pegawai dan semua pegawai, lalu periksa hasilnya.
+- Cek pada layar ponsel dan navigasikan tombol unggah dengan Tab, Enter, dan Spasi.
