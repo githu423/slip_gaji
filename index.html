@@ -1,550 +1,773 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generator Slip Gaji from excel to word</title>
-<link rel="icon" href= "image.png" type="image/png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --ink:#1c2430;
-    --ink-soft:#3b4657;
-    --paper:#f4f1e8;
-    --paper-line:#dcd6c4;
-    --brass:#a9803f;
-    --brass-dark:#8a672f;
-    --stamp:#7a2e2e;
-    --ok:#39624b;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{
-    background:var(--ink);
-    color:var(--paper);
-    font-family:'Inter',system-ui,sans-serif;
-    min-height:100vh;
-    padding: max(24px, env(safe-area-inset-top)) 20px 40px;
-  }
-  .wrap{max-width:920px;margin:0 auto;}
-  header{margin-bottom:36px;}
-  header .kicker{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.04em;color:var(--brass);margin:0 0 8px;}
-  h1{font-family:'Lora',serif;font-weight:600;font-size:32px;line-height:1.2;margin:0 0 10px;color:#fff;}
-  header p{color:#b7bec9;font-size:15px;max-width:60ch;margin:0;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generator Slip Gaji Online dari Excel ke PDF & Word — Gratis</title>
+  <link rel="icon" href="image.png" type="image/x-icon">
+  <meta name="description"
+    content="Ubah data gaji banyak pegawai dari Excel menjadi slip gaji per orang secara otomatis, siap unduh dalam format PDF atau Word. Gratis, tanpa install, langsung dari browser.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://GANTI-DENGAN-DOMAIN-VERCEL-KAMU.vercel.app/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Generator Slip Gaji Online dari Excel ke PDF & Word">
+  <meta property="og:description"
+    content="Upload data gaji Excel, langsung jadi slip gaji per pegawai dalam format PDF atau Word. Gratis dan tanpa install.">
+  <meta property="og:url" content="https://GANTI-DENGAN-DOMAIN-VERCEL-KAMU.vercel.app/">
+  <meta property="og:locale" content="id_ID">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --ink: #1c2430;
+      --ink-soft: #3b4657;
+      --paper: #f4f1e8;
+      --paper-line: #dcd6c4;
+      --brass: #a9803f;
+      --brass-dark: #8a672f;
+      --stamp: #7a2e2e;
+      --ok: #39624b;
+    }
 
-  .card{
-    background:var(--paper);
-    color:var(--ink);
-    border-radius:4px;
-    padding:26px 28px;
-    margin-bottom:20px;
-    border:1px solid var(--paper-line);
-  }
-  .card h2{
-    font-family:'Lora',serif;font-size:18px;font-weight:600;margin:0 0 16px;
-    display:flex;align-items:center;gap:10px;
-  }
-  .card h2 .n{
-    font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--brass-dark);
-    border:1px solid var(--brass-dark);border-radius:50%;width:22px;height:22px;
-    display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  .drop{
-    border:1.5px dashed var(--paper-line);
-    border-radius:4px;
-    padding:32px 20px;
-    text-align:center;
-    cursor:pointer;
-    transition:border-color .15s, background .15s;
-  }
-  .drop:hover, .drop.drag{border-color:var(--brass); background:#efe9d8;}
-  .drop p{margin:0 0 4px;font-size:15px;}
-  .drop .sub{font-size:13px;color:var(--ink-soft);}
-  .drop input{display:none;}
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
 
-  .link-btn{
-    background:none;border:none;color:var(--brass-dark);text-decoration:underline;
-    cursor:pointer;font-size:13px;font-family:inherit;padding:0;
-  }
+    body {
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      padding: max(24px, env(safe-area-inset-top)) 20px 40px;
+    }
 
-  .file-info{
-    margin-top:14px;font-family:'IBM Plex Mono',monospace;font-size:13px;
-    color:var(--ok);display:none;
-  }
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+    }
 
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-  @media (max-width:520px){.grid2{grid-template-columns:1fr;}}
-  label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:5px;font-family:'IBM Plex Mono',monospace;}
-  input[type=text], select{
-    width:100%;padding:9px 10px;border:1px solid var(--paper-line);border-radius:3px;
-    background:#fff;font-family:inherit;font-size:14px;color:var(--ink);
-  }
-  input[type=text]:focus, select:focus{outline:2px solid var(--brass);outline-offset:1px;}
+    header {
+      margin-bottom: 36px;
+    }
 
-  .table-wrap{overflow-x:auto;border:1px solid var(--paper-line);border-radius:3px;margin-top:6px;}
-  table{border-collapse:collapse;width:100%;font-size:13px;min-width:600px;}
-  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--paper-line);white-space:nowrap;}
-  th{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:none;color:var(--ink-soft);background:#eee8d8;position:sticky;top:0;}
-  td.num{font-family:'IBM Plex Mono',monospace;text-align:right;}
-  tbody tr:hover{background:#efe9d8;}
-  td.actions button{
-    font-size:12px;padding:4px 9px;border-radius:3px;border:1px solid var(--brass-dark);
-    background:none;color:var(--brass-dark);cursor:pointer;font-family:inherit;
-  }
-  td.actions button:hover{background:var(--brass-dark);color:#fff;}
+    header .kicker {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      letter-spacing: .04em;
+      color: var(--brass);
+      margin: 0 0 8px;
+    }
 
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
-  .toolbar input[type=text]{max-width:260px;}
-  .count{font-size:12px;color:var(--ink-soft);font-family:'IBM Plex Mono',monospace;}
+    h1 {
+      font-family: 'Lora', serif;
+      font-weight: 600;
+      font-size: 32px;
+      line-height: 1.2;
+      margin: 0 0 10px;
+      color: #fff;
+    }
 
-  .primary-btn{
-    background:var(--stamp);color:#fff;border:none;padding:11px 20px;border-radius:3px;
-    font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;
-  }
-  .primary-btn:hover{background:#5f2323;}
-  .primary-btn:disabled{background:#a99;cursor:not-allowed;opacity:.6;}
+    header p {
+      color: #b7bec9;
+      font-size: 15px;
+      max-width: 60ch;
+      margin: 0;
+    }
 
-  .empty{color:var(--ink-soft);font-size:14px;padding:24px 0;text-align:center;}
-  .status{font-size:13px;margin-top:10px;font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);}
-  footer{text-align:center;color:#6b7382;font-size:12px;margin-top:30px;}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <header>
-    <p class="kicker">SLIP GAJI &mdash; GENERATOR</p>
-    <h1>Ubah satu file Excel jadi surat rincian gaji untuk setiap pegawai.</h1>
-    <p>Upload data gaji, periksa hasilnya, lalu unduh slip gaji per orang atau semuanya sekaligus dalam satu ZIP. Semua proses berjalan di browser &mdash; file tidak dikirim ke server mana pun.</p>
-  </header>
+    .card {
+      background: var(--paper);
+      color: var(--ink);
+      border-radius: 4px;
+      padding: 26px 28px;
+      margin-bottom: 20px;
+      border: 1px solid var(--paper-line);
+    }
 
-  <section class="card">
-    <h2><span class="n">1</span> Upload data Excel</h2>
-    <div class="drop" id="dropZone">
-      <p><strong>Klik untuk pilih file</strong> atau seret file .xlsx ke sini</p>
-      <p class="sub">Kolom wajib: Nama, Gaji Pokok. Kolom opsional: NIK, Jabatan, Departemen, Tunjangan..., Potongan...</p>
-      <input type="file" id="fileInput" accept=".xlsx,.xls">
-    </div>
-    <div class="file-info" id="fileInfo"></div>
-    <p style="margin:12px 0 0;"><button class="link-btn" id="downloadTemplate">Unduh contoh format Excel</button></p>
-  </section>
+    .card h2 {
+      font-family: 'Lora', serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-  <section class="card">
-    <h2><span class="n">2</span> Detail surat</h2>
-    <div class="grid2">
-      <div>
-        <label for="companyName">Nama perusahaan / instansi</label>
-        <input type="text" id="companyName" placeholder="PT Contoh Sejahtera">
-      </div>
-      <div>
-        <label for="companyAddress">Alamat (opsional)</label>
-        <input type="text" id="companyAddress" placeholder="Jl. Contoh No. 1, Tasikmalaya">
-      </div>
-      <div>
-        <label for="periode">Periode gaji</label>
-        <input type="text" id="periode" placeholder="September 2026">
-      </div>
-      <div>
-        <label for="formatSelect">Format surat</label>
-        <select id="formatSelect">
-          <option value="docx">Word (.docx) — 1 lembar per orang</option>
-          <option value="pdf">PDF</option>
-        </select>
-      </div>
-    </div>
-  </section>
+    .card h2 .n {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--brass-dark);
+      border: 1px solid var(--brass-dark);
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
 
-  <section class="card">
-    <h2><span class="n">3</span> Periksa data &amp; unduh slip</h2>
-    <div id="tableSection">
-      <p class="empty">Belum ada data. Upload file Excel di langkah 1.</p>
-    </div>
-  </section>
+    .drop {
+      border: 1.5px dashed var(--paper-line);
+      border-radius: 4px;
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
 
-  <footer>Dibuat untuk dipakai langsung &mdash; tanpa framework, tanpa server. Cukup deploy folder ini ke Vercel.</footer>
-</div>
+    .drop:hover,
+    .drop.drag {
+      border-color: var(--brass);
+      background: #efe9d8;
+    }
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
-<script>
-(function(){
-  "use strict";
+    .drop p {
+      margin: 0 0 4px;
+      font-size: 15px;
+    }
 
-  let rows = [];          // parsed employee rows
-  let cols = {tunjangan:[], potongan:[]};
+    .drop .sub {
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
 
-  const dropZone = document.getElementById('dropZone');
-  const fileInput = document.getElementById('fileInput');
-  const fileInfo = document.getElementById('fileInfo');
-  const tableSection = document.getElementById('tableSection');
+    .drop input {
+      display: none;
+    }
 
-  dropZone.addEventListener('click', () => fileInput.click());
-  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
-  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
-  dropZone.addEventListener('drop', e => {
-    e.preventDefault(); dropZone.classList.remove('drag');
-    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-  });
-  fileInput.addEventListener('change', e => {
-    if (e.target.files.length) handleFile(e.target.files[0]);
-  });
-  document.getElementById('formatSelect').addEventListener('change', () => {
-    if (rows.length) renderTable(document.getElementById('searchBox') ? document.getElementById('searchBox').value : '');
-  });
+    .link-btn {
+      background: none;
+      border: none;
+      color: var(--brass-dark);
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: inherit;
+      padding: 0;
+    }
 
-  function handleFile(file){
-    const reader = new FileReader();
-    reader.onload = evt => {
-      try{
-        const wb = XLSX.read(evt.target.result, {type:'array'});
-        const sheet = wb.Sheets[wb.SheetNames[0]];
-        const json = XLSX.utils.sheet_to_json(sheet, {defval:''});
-        if (!json.length) throw new Error('File kosong atau tidak terbaca.');
-        loadRows(json);
-        fileInfo.style.display = 'block';
-        fileInfo.textContent = `${file.name} — ${json.length} pegawai terbaca`;
-      }catch(err){
-        fileInfo.style.display = 'block';
-        fileInfo.style.color = '#7a2e2e';
-        fileInfo.textContent = 'Gagal membaca file: ' + err.message;
+    .file-info {
+      margin-top: 14px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      color: var(--ok);
+      display: none;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width:520px) {
+      .grid2 {
+        grid-template-columns: 1fr;
       }
-    };
-    reader.readAsArrayBuffer(file);
-  }
-
-  function loadRows(json){
-    rows = json;
-    const headers = Object.keys(json[0]);
-    cols.tunjangan = headers.filter(h => /^tunjangan/i.test(h));
-    cols.potongan  = headers.filter(h => /^potongan/i.test(h));
-    renderTable();
-  }
-
-  function totals(row){
-    let pendapatan = Number(row['Gaji Pokok']) || 0;
-    cols.tunjangan.forEach(c => pendapatan += Number(row[c]) || 0);
-    let potongan = 0;
-    cols.potongan.forEach(c => potongan += Number(row[c]) || 0);
-    return { pendapatan, potongan, bersih: pendapatan - potongan };
-  }
-
-  function formatRp(n){
-    return 'Rp ' + (Number(n)||0).toLocaleString('id-ID');
-  }
-
-  function renderTable(filterText){
-    filterText = (filterText || '').toLowerCase();
-    const filtered = rows.filter(r => {
-      if (!filterText) return true;
-      return ['Nama','NIK','Jabatan','Departemen'].some(k =>
-        String(r[k] || '').toLowerCase().includes(filterText));
-    });
-
-    let html = `
-      <div class="toolbar">
-        <input type="text" id="searchBox" placeholder="Cari nama / NIK / jabatan..." value="${filterText}">
-        <span class="count">${filtered.length} dari ${rows.length} pegawai</span>
-        <button class="primary-btn" id="downloadAllBtn" style="margin-left:auto;">${allButtonLabel()}</button>
-      </div>
-      <div class="table-wrap"><table><thead><tr>
-        <th>Nama</th><th>NIK</th><th>Jabatan</th><th>Gaji Kotor</th><th>Gaji Bersih</th><th></th>
-      </tr></thead><tbody>`;
-
-    filtered.forEach((r, idx) => {
-      const t = totals(r);
-      const originalIndex = rows.indexOf(r);
-      html += `<tr>
-        <td>${r.Nama || '-'}</td>
-        <td>${r.NIK || '-'}</td>
-        <td>${r.Jabatan || '-'}</td>
-        <td class="num">${formatRp(t.pendapatan)}</td>
-        <td class="num">${formatRp(t.bersih)}</td>
-        <td class="actions"><button data-idx="${originalIndex}">Unduh</button></td>
-      </tr>`;
-    });
-    html += '</tbody></table></div><p class="status" id="genStatus"></p>';
-
-    tableSection.innerHTML = html;
-
-    document.getElementById('searchBox').addEventListener('input', e => renderTable(e.target.value));
-    document.getElementById('downloadAllBtn').addEventListener('click', () => {
-      currentFormat() === 'docx' ? downloadAllDocx() : downloadAllZip();
-    });
-    tableSection.querySelectorAll('td.actions button').forEach(btn => {
-      btn.addEventListener('click', () => downloadOne(rows[Number(btn.dataset.idx)]));
-    });
-  }
-
-  function currentFormat(){
-    return document.getElementById('formatSelect').value;
-  }
-
-  function allButtonLabel(){
-    return currentFormat() === 'docx' ? 'Unduh semua (Word, 1 file)' : 'Unduh semua (ZIP)';
-  }
-
-  async function downloadOne(row){
-    if (currentFormat() === 'docx'){
-      const blob = await docx.Packer.toBlob(buildSlipDocx(row));
-      triggerDownload(blob, slipFilename(row, 'docx'));
-    } else {
-      const doc = buildSlipPdf(row);
-      doc.save(slipFilename(row, 'pdf'));
-    }
-  }
-
-  function triggerDownload(blob, filename){
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }
-
-  function slipFilename(row, ext){
-    const periode = (document.getElementById('periode').value || 'periode').replace(/\s+/g,'_');
-    const nama = (row.Nama || 'pegawai').replace(/[^a-z0-9]+/gi,'_');
-    return `Slip_Gaji_${nama}_${periode}.${ext}`;
-  }
-
-  function buildSlipPdf(row){
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({unit:'mm', format:'a5'});
-    const company = document.getElementById('companyName').value || 'Nama Perusahaan';
-    const address = document.getElementById('companyAddress').value;
-    const periode = document.getElementById('periode').value || '-';
-    const pageW = 148;
-    let y = 16;
-
-    doc.setFont('helvetica','bold'); doc.setFontSize(13);
-    doc.text(company, pageW/2, y, {align:'center'}); y += 5.5;
-    if (address){ doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.text(address, pageW/2, y, {align:'center'}); y += 6; }
-    doc.setDrawColor(60); doc.line(12, y, pageW-12, y); y += 7;
-
-    doc.setFont('helvetica','bold'); doc.setFontSize(11);
-    doc.text('SLIP GAJI', pageW/2, y, {align:'center'}); y += 5;
-    doc.setFont('helvetica','normal'); doc.setFontSize(9);
-    doc.text(`Periode: ${periode}`, pageW/2, y, {align:'center'}); y += 9;
-
-    doc.setFontSize(9.5);
-    [['Nama', row.Nama], ['NIK', row.NIK], ['Jabatan', row.Jabatan], ['Departemen', row.Departemen]]
-      .filter(([,v]) => v !== undefined && v !== '')
-      .forEach(([label, val]) => {
-        doc.text(label, 12, y);
-        doc.text(': ' + val, 34, y);
-        y += 5.5;
-      });
-    y += 2; doc.line(12, y, pageW-12, y); y += 6;
-
-    const t = totals(row);
-
-    doc.setFont('helvetica','bold'); doc.text('Pendapatan', 12, y); y += 5.5;
-    doc.setFont('helvetica','normal');
-    if (row['Gaji Pokok'] !== undefined && row['Gaji Pokok'] !== '') {
-      doc.text('Gaji Pokok', 16, y); doc.text(formatRp(row['Gaji Pokok']), pageW-12, y, {align:'right'}); y += 5.5;
-    }
-    cols.tunjangan.forEach(c => {
-      if (row[c] === undefined || row[c] === '') return;
-      doc.text(c, 16, y); doc.text(formatRp(row[c]), pageW-12, y, {align:'right'}); y += 5.5;
-    });
-    y += 1; doc.line(12, y, pageW-12, y); y += 5.5;
-    doc.setFont('helvetica','bold');
-    doc.text('Gaji Kotor', 16, y); doc.text(formatRp(t.pendapatan), pageW-12, y, {align:'right'}); y += 8;
-
-    if (cols.potongan.length){
-      doc.setFont('helvetica','bold'); doc.text('Potongan', 12, y); y += 5.5;
-      doc.setFont('helvetica','normal');
-      cols.potongan.forEach(c => {
-        if (row[c] === undefined || row[c] === '') return;
-        doc.text(c, 16, y); doc.text(formatRp(row[c]), pageW-12, y, {align:'right'}); y += 5.5;
-      });
-      y += 1; doc.line(12, y, pageW-12, y); y += 5.5;
-      doc.setFont('helvetica','bold');
-      doc.text('Total Potongan', 16, y); doc.text(formatRp(t.potongan), pageW-12, y, {align:'right'}); y += 8;
     }
 
-    doc.setFontSize(11);
-    doc.text('GAJI BERSIH', 12, y);
-    doc.text(formatRp(t.bersih), pageW-12, y, {align:'right'});
-
-    doc.setFontSize(7.5); doc.setFont('helvetica','italic');
-    doc.text('Dokumen digenerate otomatis.', pageW/2, 200, {align:'center'});
-
-    return doc;
-  }
-
-  // ---------- Word (.docx) generation ----------
-
-  function row2col(label, value, opts){
-    opts = opts || {};
-    return new docx.TableRow({
-      children: [
-        new docx.TableCell({
-          width: {size:60, type: docx.WidthType.PERCENTAGE},
-          borders: noBorders(),
-          children: [new docx.Paragraph({ children:[ new docx.TextRun({text: label, bold: !!opts.bold}) ] })]
-        }),
-        new docx.TableCell({
-          width: {size:40, type: docx.WidthType.PERCENTAGE},
-          borders: noBorders(),
-          children: [new docx.Paragraph({ alignment: docx.AlignmentType.RIGHT,
-            children:[ new docx.TextRun({text: value, bold: !!opts.bold}) ] })]
-        })
-      ]
-    });
-  }
-
-  function noBorders(){
-    const none = {style: docx.BorderStyle.NONE, size:0, color:'FFFFFF'};
-    return {top:none, bottom:none, left:none, right:none};
-  }
-
-  function divider(){
-    return new docx.Paragraph({
-      border: { bottom: { color: '999999', space: 1, style: docx.BorderStyle.SINGLE, size: 4 } },
-      spacing: { after: 160 }
-    });
-  }
-
-  function buildSlipSection(row){
-    const company = document.getElementById('companyName').value || 'Nama Perusahaan';
-    const address = document.getElementById('companyAddress').value;
-    const periode = document.getElementById('periode').value || '-';
-    const t = totals(row);
-    const children = [];
-
-    children.push(new docx.Paragraph({
-      alignment: docx.AlignmentType.CENTER,
-      children: [ new docx.TextRun({text: company, bold:true, size: 28}) ]
-    }));
-    if (address){
-      children.push(new docx.Paragraph({
-        alignment: docx.AlignmentType.CENTER,
-        children: [ new docx.TextRun({text: address, size: 18, color:'555555'}) ]
-      }));
-    }
-    children.push(divider());
-    children.push(new docx.Paragraph({
-      alignment: docx.AlignmentType.CENTER,
-      spacing: { after: 40 },
-      children: [ new docx.TextRun({text:'SLIP GAJI', bold:true, size:24}) ]
-    }));
-    children.push(new docx.Paragraph({
-      alignment: docx.AlignmentType.CENTER,
-      spacing: { after: 200 },
-      children: [ new docx.TextRun({text:`Periode: ${periode}`, size:20, color:'555555'}) ]
-    }));
-
-    const infoRows = [['Nama', row.Nama], ['NIK', row.NIK], ['Jabatan', row.Jabatan], ['Departemen', row.Departemen]]
-      .filter(([,v]) => v !== undefined && v !== '')
-      .map(([label, val]) => row2col(label, String(val)));
-    children.push(new docx.Table({ width:{size:100, type:docx.WidthType.PERCENTAGE}, rows: infoRows }));
-    children.push(divider());
-
-    const earningRows = [];
-    if (row['Gaji Pokok'] !== undefined && row['Gaji Pokok'] !== '') {
-      earningRows.push(row2col('Gaji Pokok', formatRp(row['Gaji Pokok'])));
-    }
-    cols.tunjangan.forEach(c => {
-      if (row[c] === undefined || row[c] === '') return;
-      earningRows.push(row2col(c, formatRp(row[c])));
-    });
-    earningRows.push(row2col('Gaji Kotor', formatRp(t.pendapatan), {bold:true}));
-    children.push(new docx.Paragraph({ spacing:{before:80, after:40}, children:[ new docx.TextRun({text:'Pendapatan', bold:true, size:20}) ] }));
-    children.push(new docx.Table({ width:{size:100, type:docx.WidthType.PERCENTAGE}, rows: earningRows }));
-
-    if (cols.potongan.length){
-      const deductionRows = [];
-      cols.potongan.forEach(c => {
-        if (row[c] === undefined || row[c] === '') return;
-        deductionRows.push(row2col(c, formatRp(row[c])));
-      });
-      deductionRows.push(row2col('Total Potongan', formatRp(t.potongan), {bold:true}));
-      children.push(new docx.Paragraph({ spacing:{before:200, after:40}, children:[ new docx.TextRun({text:'Potongan', bold:true, size:20}) ] }));
-      children.push(new docx.Table({ width:{size:100, type:docx.WidthType.PERCENTAGE}, rows: deductionRows }));
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-bottom: 5px;
+      font-family: 'IBM Plex Mono', monospace;
     }
 
-    children.push(divider());
-    children.push(new docx.Table({ width:{size:100, type:docx.WidthType.PERCENTAGE},
-      rows: [ row2col('GAJI BERSIH', formatRp(t.bersih), {bold:true}) ] }));
-
-    children.push(new docx.Paragraph({
-      alignment: docx.AlignmentType.CENTER,
-      spacing: { before: 300 },
-      children: [ new docx.TextRun({text:'Dokumen digenerate otomatis.', italics:true, size:16, color:'777777'}) ]
-    }));
-
-    return children;
-  }
-
-  function buildSlipDocx(row){
-    return new docx.Document({ sections: [{ children: buildSlipSection(row) }] });
-  }
-
-  async function downloadAllDocx(){
-    if (!rows.length) return;
-    const statusEl = document.getElementById('genStatus');
-    const btn = document.getElementById('downloadAllBtn');
-    btn.disabled = true;
-    statusEl.textContent = `Menyusun ${rows.length} lembar slip...`;
-
-    const allChildren = [];
-    rows.forEach((row, i) => {
-      const section = buildSlipSection(row);
-      if (i > 0) section.unshift(new docx.Paragraph({ children: [], pageBreakBefore: true }));
-      allChildren.push(...section);
-    });
-
-    const doc = new docx.Document({ sections: [{ children: allChildren }] });
-    const blob = await docx.Packer.toBlob(doc);
-    const periode = (document.getElementById('periode').value || 'periode').replace(/\s+/g,'_');
-    triggerDownload(blob, `Slip_Gaji_${periode}.docx`);
-    statusEl.textContent = `Selesai — ${rows.length} lembar dalam satu file Word, satu halaman per orang.`;
-    btn.disabled = false;
-  }
-
-  async function downloadAllZip(){
-    if (!rows.length) return;
-    const statusEl = document.getElementById('genStatus');
-    const btn = document.getElementById('downloadAllBtn');
-    btn.disabled = true;
-    const zip = new JSZip();
-    for (let i = 0; i < rows.length; i++){
-      statusEl.textContent = `Membuat slip ${i+1} dari ${rows.length}...`;
-      const doc = buildSlipPdf(rows[i]);
-      zip.file(slipFilename(rows[i], 'pdf'), doc.output('blob'));
-      await new Promise(r => setTimeout(r, 0)); // keep UI responsive
+    input[type=text],
+    select {
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid var(--paper-line);
+      border-radius: 3px;
+      background: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--ink);
     }
-    statusEl.textContent = 'Menyusun file ZIP...';
-    const blob = await zip.generateAsync({type:'blob'});
-    const periode = (document.getElementById('periode').value || 'periode').replace(/\s+/g,'_');
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `Slip_Gaji_${periode}.zip`;
-    a.click();
-    URL.revokeObjectURL(a.href);
-    statusEl.textContent = `Selesai — ${rows.length} slip diunduh dalam satu ZIP.`;
-    btn.disabled = false;
-  }
 
-  document.getElementById('downloadTemplate').addEventListener('click', () => {
-    const sample = [
-      {Nama:'Siti Aminah', NIK:'3201010001', Jabatan:'Staf Administrasi', Departemen:'Umum',
-       'Gaji Pokok':3500000, 'Tunjangan Jabatan':500000, 'Tunjangan Transport':300000,
-       'Potongan BPJS':175000},
-      {Nama:'Budi Santoso', NIK:'3201010002', Jabatan:'Staf Keuangan', Departemen:'Keuangan',
-       'Gaji Pokok':4000000, 'Tunjangan Jabatan':700000, 'Tunjangan Transport':300000,
-       'Potongan BPJS':200000}
-    ];
-    const ws = XLSX.utils.json_to_sheet(sample);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Data Gaji');
-    XLSX.writeFile(wb, 'Contoh_Data_Gaji.xlsx');
-  });
-})();
-</script>
-</body>
+    input[type=text]:focus,
+    select:focus {
+      outline: 2px solid var(--brass);
+      outline-offset: 1px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--paper-line);
+      border-radius: 3px;
+      margin-top: 6px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 13px;
+      min-width: 600px;
+    }
+
+    th,
+    td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--paper-line);
+      white-space: nowrap;
+    }
+
+    th {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      text-transform: none;
+      color: var(--ink-soft);
+      background: #eee8d8;
+      position: sticky;
+      top: 0;
+    }
+
+    td.num {
+      font-family: 'IBM Plex Mono', monospace;
+      text-align: right;
+    }
+
+    tbody tr:hover {
+      background: #efe9d8;
+    }
+
+    td.actions button {
+      font-size: 12px;
+      padding: 4px 9px;
+      border-radius: 3px;
+      border: 1px solid var(--brass-dark);
+      background: none;
+      color: var(--brass-dark);
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    td.actions button:hover {
+      background: var(--brass-dark);
+      color: #fff;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .toolbar input[type=text] {
+      max-width: 260px;
+    }
+
+    .count {
+      font-size: 12px;
+      color: var(--ink-soft);
+      font-family: 'IBM Plex Mono', monospace;
+    }
+
+    .primary-btn {
+      background: var(--stamp);
+      color: #fff;
+      border: none;
+      padding: 11px 20px;
+      border-radius: 3px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .primary-btn:hover {
+      background: #5f2323;
+    }
+
+    .primary-btn:disabled {
+      background: #a99;
+      cursor: not-allowed;
+      opacity: .6;
+    }
+
+    .empty {
+      color: var(--ink-soft);
+      font-size: 14px;
+      padding: 24px 0;
+      text-align: center;
+    }
+
+    .status {
+      font-size: 13px;
+      margin-top: 10px;
+      font-family: 'IBM Plex Mono', monospace;
+      color: var(--ink-soft);
+    }
+
+    footer {
+      text-align: center;
+      color: #6b7382;
+      font-size: 12px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+
+  <body>
+    <div class="wrap">
+      <header>
+        <p class="kicker">SLIP GAJI &mdash; GENERATOR</p>
+        <h1>Ubah satu file Excel jadi surat rincian gaji untuk setiap pegawai.</h1>
+        <p>Upload data gaji, periksa hasilnya, lalu unduh slip gaji per orang atau semuanya sekaligus dalam satu ZIP.
+          Semua proses berjalan di browser &mdash; file tidak dikirim ke server mana pun.</p>
+      </header>
+
+      <section class="card">
+        <h2><span class="n">1</span> Upload data Excel</h2>
+        <div class="drop" id="dropZone">
+          <p><strong>Klik untuk pilih file</strong> atau seret file .xlsx ke sini</p>
+          <p class="sub">Kolom wajib: Nama, Gaji Pokok. Kolom opsional: NIK, Jabatan, Departemen, Tunjangan...,
+            Potongan...</p>
+          <input type="file" id="fileInput" accept=".xlsx,.xls">
+        </div>
+        <div class="file-info" id="fileInfo"></div>
+        <p style="margin:12px 0 0;"><button class="link-btn" id="downloadTemplate">Unduh contoh format Excel</button></p>
+      </section>
+
+      <section class="card">
+        <h2><span class="n">2</span> Detail surat</h2>
+        <div class="grid2">
+          <div>
+            <label for="companyName">Nama perusahaan / instansi</label>
+            <input type="text" id="companyName" placeholder="PT Contoh Sejahtera">
+          </div>
+          <div>
+            <label for="companyAddress">Alamat (opsional)</label>
+            <input type="text" id="companyAddress" placeholder="Jl. Contoh No. 1, Tasikmalaya">
+          </div>
+          <div>
+            <label for="periode">Periode gaji</label>
+            <input type="text" id="periode" placeholder="September 2026">
+          </div>
+          <div>
+            <label for="formatSelect">Format surat</label>
+            <select id="formatSelect">
+              <option value="docx">Word (.docx) — 1 lembar per orang</option>
+              <option value="pdf">PDF</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2><span class="n">3</span> Periksa data &amp; unduh slip</h2>
+        <div id="tableSection">
+          <p class="empty">Belum ada data. Upload file Excel di langkah 1.</p>
+        </div>
+      </section>
+
+      <footer>Dibuat untuk dipakai langsung &mdash; tanpa framework, tanpa server. Cukup deploy folder ini ke Vercel.
+      </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+    <script>
+      (function () {
+        "use strict";
+
+        let rows = [];          // parsed employee rows
+        let cols = { tunjangan: [], potongan: [] };
+
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const tableSection = document.getElementById('tableSection');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+        dropZone.addEventListener('drop', e => {
+          e.preventDefault(); dropZone.classList.remove('drag');
+          if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', e => {
+          if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+        document.getElementById('formatSelect').addEventListener('change', () => {
+          if (rows.length) renderTable(document.getElementById('searchBox') ? document.getElementById('searchBox').value : '');
+        });
+
+        function handleFile(file) {
+          const reader = new FileReader();
+          reader.onload = evt => {
+            try {
+              const wb = XLSX.read(evt.target.result, { type: 'array' });
+              const sheet = wb.Sheets[wb.SheetNames[0]];
+              const json = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+              if (!json.length) throw new Error('File kosong atau tidak terbaca.');
+              loadRows(json);
+              fileInfo.style.display = 'block';
+              fileInfo.textContent = `${file.name} — ${json.length} pegawai terbaca`;
+            } catch (err) {
+              fileInfo.style.display = 'block';
+              fileInfo.style.color = '#7a2e2e';
+              fileInfo.textContent = 'Gagal membaca file: ' + err.message;
+            }
+          };
+          reader.readAsArrayBuffer(file);
+        }
+
+        function loadRows(json) {
+          rows = json;
+          const headers = Object.keys(json[0]);
+          cols.tunjangan = headers.filter(h => /^tunjangan/i.test(h));
+          cols.potongan = headers.filter(h => /^potongan/i.test(h));
+          renderTable();
+        }
+
+        function totals(row) {
+          let pendapatan = Number(row['Gaji Pokok']) || 0;
+          cols.tunjangan.forEach(c => pendapatan += Number(row[c]) || 0);
+          let potongan = 0;
+          cols.potongan.forEach(c => potongan += Number(row[c]) || 0);
+          return { pendapatan, potongan, bersih: pendapatan - potongan };
+        }
+
+        function formatRp(n) {
+          return 'Rp ' + (Number(n) || 0).toLocaleString('id-ID');
+        }
+
+        function renderTable(filterText) {
+          filterText = (filterText || '').toLowerCase();
+          const filtered = rows.filter(r => {
+            if (!filterText) return true;
+            return ['Nama', 'NIK', 'Jabatan', 'Departemen'].some(k =>
+              String(r[k] || '').toLowerCase().includes(filterText));
+          });
+
+          let html = `
+        <div class="toolbar">
+          <input type="text" id="searchBox" placeholder="Cari nama / NIK / jabatan..." value="${filterText}">
+          <span class="count">${filtered.length} dari ${rows.length} pegawai</span>
+          <button class="primary-btn" id="downloadAllBtn" style="margin-left:auto;">${allButtonLabel()}</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr>
+          <th>Nama</th><th>NIK</th><th>Jabatan</th><th>Gaji Kotor</th><th>Gaji Bersih</th><th></th>
+        </tr></thead><tbody>`;
+
+          filtered.forEach((r, idx) => {
+            const t = totals(r);
+            const originalIndex = rows.indexOf(r);
+            html += `<tr>
+          <td>${r.Nama || '-'}</td>
+          <td>${r.NIK || '-'}</td>
+          <td>${r.Jabatan || '-'}</td>
+          <td class="num">${formatRp(t.pendapatan)}</td>
+          <td class="num">${formatRp(t.bersih)}</td>
+          <td class="actions"><button data-idx="${originalIndex}">Unduh</button></td>
+        </tr>`;
+          });
+          html += '</tbody></table></div><p class="status" id="genStatus"></p>';
+
+          tableSection.innerHTML = html;
+
+          document.getElementById('searchBox').addEventListener('input', e => renderTable(e.target.value));
+          document.getElementById('downloadAllBtn').addEventListener('click', () => {
+            currentFormat() === 'docx' ? downloadAllDocx() : downloadAllZip();
+          });
+          tableSection.querySelectorAll('td.actions button').forEach(btn => {
+            btn.addEventListener('click', () => downloadOne(rows[Number(btn.dataset.idx)]));
+          });
+        }
+
+        function currentFormat() {
+          return document.getElementById('formatSelect').value;
+        }
+
+        function allButtonLabel() {
+          return currentFormat() === 'docx' ? 'Unduh semua (Word, 1 file)' : 'Unduh semua (ZIP)';
+        }
+
+        async function downloadOne(row) {
+          if (currentFormat() === 'docx') {
+            const blob = await docx.Packer.toBlob(buildSlipDocx(row));
+            triggerDownload(blob, slipFilename(row, 'docx'));
+          } else {
+            const doc = buildSlipPdf(row);
+            doc.save(slipFilename(row, 'pdf'));
+          }
+        }
+
+        function triggerDownload(blob, filename) {
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = filename;
+          a.click();
+          URL.revokeObjectURL(a.href);
+        }
+
+        function slipFilename(row, ext) {
+          const periode = (document.getElementById('periode').value || 'periode').replace(/\s+/g, '_');
+          const nama = (row.Nama || 'pegawai').replace(/[^a-z0-9]+/gi, '_');
+          return `Slip_Gaji_${nama}_${periode}.${ext}`;
+        }
+
+        function buildSlipPdf(row) {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF({ unit: 'mm', format: 'a5' });
+          const company = document.getElementById('companyName').value || 'Nama Perusahaan';
+          const address = document.getElementById('companyAddress').value;
+          const periode = document.getElementById('periode').value || '-';
+          const pageW = 148;
+          let y = 16;
+
+          doc.setFont('helvetica', 'bold'); doc.setFontSize(13);
+          doc.text(company, pageW / 2, y, { align: 'center' }); y += 5.5;
+          if (address) { doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.text(address, pageW / 2, y, { align: 'center' }); y += 6; }
+          doc.setDrawColor(60); doc.line(12, y, pageW - 12, y); y += 7;
+
+          doc.setFont('helvetica', 'bold'); doc.setFontSize(11);
+          doc.text('SLIP GAJI', pageW / 2, y, { align: 'center' }); y += 5;
+          doc.setFont('helvetica', 'normal'); doc.setFontSize(9);
+          doc.text(`Periode: ${periode}`, pageW / 2, y, { align: 'center' }); y += 9;
+
+          doc.setFontSize(9.5);
+          [['Nama', row.Nama], ['NIK', row.NIK], ['Jabatan', row.Jabatan], ['Departemen', row.Departemen]]
+            .filter(([, v]) => v !== undefined && v !== '')
+            .forEach(([label, val]) => {
+              doc.text(label, 12, y);
+              doc.text(': ' + val, 34, y);
+              y += 5.5;
+            });
+          y += 2; doc.line(12, y, pageW - 12, y); y += 6;
+
+          const t = totals(row);
+
+          doc.setFont('helvetica', 'bold'); doc.text('Pendapatan', 12, y); y += 5.5;
+          doc.setFont('helvetica', 'normal');
+          if (row['Gaji Pokok'] !== undefined && row['Gaji Pokok'] !== '') {
+            doc.text('Gaji Pokok', 16, y); doc.text(formatRp(row['Gaji Pokok']), pageW - 12, y, { align: 'right' }); y += 5.5;
+          }
+          cols.tunjangan.forEach(c => {
+            if (row[c] === undefined || row[c] === '') return;
+            doc.text(c, 16, y); doc.text(formatRp(row[c]), pageW - 12, y, { align: 'right' }); y += 5.5;
+          });
+          y += 1; doc.line(12, y, pageW - 12, y); y += 5.5;
+          doc.setFont('helvetica', 'bold');
+          doc.text('Gaji Kotor', 16, y); doc.text(formatRp(t.pendapatan), pageW - 12, y, { align: 'right' }); y += 8;
+
+          if (cols.potongan.length) {
+            doc.setFont('helvetica', 'bold'); doc.text('Potongan', 12, y); y += 5.5;
+            doc.setFont('helvetica', 'normal');
+            cols.potongan.forEach(c => {
+              if (row[c] === undefined || row[c] === '') return;
+              doc.text(c, 16, y); doc.text(formatRp(row[c]), pageW - 12, y, { align: 'right' }); y += 5.5;
+            });
+            y += 1; doc.line(12, y, pageW - 12, y); y += 5.5;
+            doc.setFont('helvetica', 'bold');
+            doc.text('Total Potongan', 16, y); doc.text(formatRp(t.potongan), pageW - 12, y, { align: 'right' }); y += 8;
+          }
+
+          doc.setFontSize(11);
+          doc.text('GAJI BERSIH', 12, y);
+          doc.text(formatRp(t.bersih), pageW - 12, y, { align: 'right' });
+
+          doc.setFontSize(7.5); doc.setFont('helvetica', 'italic');
+          doc.text('Dokumen digenerate otomatis.', pageW / 2, 200, { align: 'center' });
+
+          return doc;
+        }
+
+        // ---------- Word (.docx) generation ----------
+
+        function row2col(label, value, opts) {
+          opts = opts || {};
+          return new docx.TableRow({
+            children: [
+              new docx.TableCell({
+                width: { size: 60, type: docx.WidthType.PERCENTAGE },
+                borders: noBorders(),
+                children: [new docx.Paragraph({ children: [new docx.TextRun({ text: label, bold: !!opts.bold })] })]
+              }),
+              new docx.TableCell({
+                width: { size: 40, type: docx.WidthType.PERCENTAGE },
+                borders: noBorders(),
+                children: [new docx.Paragraph({
+                  alignment: docx.AlignmentType.RIGHT,
+                  children: [new docx.TextRun({ text: value, bold: !!opts.bold })]
+                })]
+              })
+            ]
+          });
+        }
+
+        function noBorders() {
+          const none = { style: docx.BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+          return { top: none, bottom: none, left: none, right: none };
+        }
+
+        function divider() {
+          return new docx.Paragraph({
+            border: { bottom: { color: '999999', space: 1, style: docx.BorderStyle.SINGLE, size: 4 } },
+            spacing: { after: 160 }
+          });
+        }
+
+        function buildSlipSection(row) {
+          const company = document.getElementById('companyName').value || 'Nama Perusahaan';
+          const address = document.getElementById('companyAddress').value;
+          const periode = document.getElementById('periode').value || '-';
+          const t = totals(row);
+          const children = [];
+
+          children.push(new docx.Paragraph({
+            alignment: docx.AlignmentType.CENTER,
+            children: [new docx.TextRun({ text: company, bold: true, size: 28 })]
+          }));
+          if (address) {
+            children.push(new docx.Paragraph({
+              alignment: docx.AlignmentType.CENTER,
+              children: [new docx.TextRun({ text: address, size: 18, color: '555555' })]
+            }));
+          }
+          children.push(divider());
+          children.push(new docx.Paragraph({
+            alignment: docx.AlignmentType.CENTER,
+            spacing: { after: 40 },
+            children: [new docx.TextRun({ text: 'SLIP GAJI', bold: true, size: 24 })]
+          }));
+          children.push(new docx.Paragraph({
+            alignment: docx.AlignmentType.CENTER,
+            spacing: { after: 200 },
+            children: [new docx.TextRun({ text: `Periode: ${periode}`, size: 20, color: '555555' })]
+          }));
+
+          const infoRows = [['Nama', row.Nama], ['NIK', row.NIK], ['Jabatan', row.Jabatan], ['Departemen', row.Departemen]]
+            .filter(([, v]) => v !== undefined && v !== '')
+            .map(([label, val]) => row2col(label, String(val)));
+          children.push(new docx.Table({ width: { size: 100, type: docx.WidthType.PERCENTAGE }, rows: infoRows }));
+          children.push(divider());
+
+          const earningRows = [];
+          if (row['Gaji Pokok'] !== undefined && row['Gaji Pokok'] !== '') {
+            earningRows.push(row2col('Gaji Pokok', formatRp(row['Gaji Pokok'])));
+          }
+          cols.tunjangan.forEach(c => {
+            if (row[c] === undefined || row[c] === '') return;
+            earningRows.push(row2col(c, formatRp(row[c])));
+          });
+          earningRows.push(row2col('Gaji Kotor', formatRp(t.pendapatan), { bold: true }));
+          children.push(new docx.Paragraph({ spacing: { before: 80, after: 40 }, children: [new docx.TextRun({ text: 'Pendapatan', bold: true, size: 20 })] }));
+          children.push(new docx.Table({ width: { size: 100, type: docx.WidthType.PERCENTAGE }, rows: earningRows }));
+
+          if (cols.potongan.length) {
+            const deductionRows = [];
+            cols.potongan.forEach(c => {
+              if (row[c] === undefined || row[c] === '') return;
+              deductionRows.push(row2col(c, formatRp(row[c])));
+            });
+            deductionRows.push(row2col('Total Potongan', formatRp(t.potongan), { bold: true }));
+            children.push(new docx.Paragraph({ spacing: { before: 200, after: 40 }, children: [new docx.TextRun({ text: 'Potongan', bold: true, size: 20 })] }));
+            children.push(new docx.Table({ width: { size: 100, type: docx.WidthType.PERCENTAGE }, rows: deductionRows }));
+          }
+
+          children.push(divider());
+          children.push(new docx.Table({
+            width: { size: 100, type: docx.WidthType.PERCENTAGE },
+            rows: [row2col('GAJI BERSIH', formatRp(t.bersih), { bold: true })]
+          }));
+
+          children.push(new docx.Paragraph({
+            alignment: docx.AlignmentType.CENTER,
+            spacing: { before: 300 },
+            children: [new docx.TextRun({ text: 'Dokumen digenerate otomatis.', italics: true, size: 16, color: '777777' })]
+          }));
+
+          return children;
+        }
+
+        function buildSlipDocx(row) {
+          return new docx.Document({ sections: [{ children: buildSlipSection(row) }] });
+        }
+
+        async function downloadAllDocx() {
+          if (!rows.length) return;
+          const statusEl = document.getElementById('genStatus');
+          const btn = document.getElementById('downloadAllBtn');
+          btn.disabled = true;
+          statusEl.textContent = `Menyusun ${rows.length} lembar slip...`;
+
+          const allChildren = [];
+          rows.forEach((row, i) => {
+            const section = buildSlipSection(row);
+            if (i > 0) section.unshift(new docx.Paragraph({ children: [], pageBreakBefore: true }));
+            allChildren.push(...section);
+          });
+
+          const doc = new docx.Document({ sections: [{ children: allChildren }] });
+          const blob = await docx.Packer.toBlob(doc);
+          const periode = (document.getElementById('periode').value || 'periode').replace(/\s+/g, '_');
+          triggerDownload(blob, `Slip_Gaji_${periode}.docx`);
+          statusEl.textContent = `Selesai — ${rows.length} lembar dalam satu file Word, satu halaman per orang.`;
+          btn.disabled = false;
+        }
+
+        async function downloadAllZip() {
+          if (!rows.length) return;
+          const statusEl = document.getElementById('genStatus');
+          const btn = document.getElementById('downloadAllBtn');
+          btn.disabled = true;
+          const zip = new JSZip();
+          for (let i = 0; i < rows.length; i++) {
+            statusEl.textContent = `Membuat slip ${i + 1} dari ${rows.length}...`;
+            const doc = buildSlipPdf(rows[i]);
+            zip.file(slipFilename(rows[i], 'pdf'), doc.output('blob'));
+            await new Promise(r => setTimeout(r, 0)); // keep UI responsive
+          }
+          statusEl.textContent = 'Menyusun file ZIP...';
+          const blob = await zip.generateAsync({ type: 'blob' });
+          const periode = (document.getElementById('periode').value || 'periode').replace(/\s+/g, '_');
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `Slip_Gaji_${periode}.zip`;
+          a.click();
+          URL.revokeObjectURL(a.href);
+          statusEl.textContent = `Selesai — ${rows.length} slip diunduh dalam satu ZIP.`;
+          btn.disabled = false;
+        }
+
+        document.getElementById('downloadTemplate').addEventListener('click', () => {
+          const sample = [
+            {
+              Nama: 'Siti Aminah', NIK: '3201010001', Jabatan: 'Staf Administrasi', Departemen: 'Umum',
+              'Gaji Pokok': 3500000, 'Tunjangan Jabatan': 500000, 'Tunjangan Transport': 300000,
+              'Potongan BPJS': 175000
+            },
+            {
+              Nama: 'Budi Santoso', NIK: '3201010002', Jabatan: 'Staf Keuangan', Departemen: 'Keuangan',
+              'Gaji Pokok': 4000000, 'Tunjangan Jabatan': 700000, 'Tunjangan Transport': 300000,
+              'Potongan BPJS': 200000
+            }
+          ];
+          const ws = XLSX.utils.json_to_sheet(sample);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, 'Data Gaji');
+          XLSX.writeFile(wb, 'Contoh_Data_Gaji.xlsx');
+        });
+      })();
+    </script>
+  </body>
+
 </html>
